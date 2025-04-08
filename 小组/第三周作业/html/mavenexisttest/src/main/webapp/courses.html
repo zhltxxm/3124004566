@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>课程搜索</title>
+</head>
+<body>
+<h1>课程搜索</h1>
+
+<div class="search-box">
+  <input type="text" id="keyword" placeholder="输入课程名称">
+  <button onclick="searchCourses()">搜索</button>
+</div>
+
+<table id="courses-table">
+  <thead>
+  <tr>
+    <th>课程ID</th>
+    <th>课程名称</th>
+    <th>学分</th>
+  </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  function searchCourses() {
+    const keyword = document.getElementById('keyword').value;
+
+    fetch(`/mavenexisttest/api/courses?keyword=${encodeURIComponent(keyword)}`)
+            .then(response => response.json())
+            .then(courses => {
+              const tbody = document.querySelector('#courses-table tbody');
+              tbody.innerHTML = '';
+
+              courses.forEach(course => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                            <td>${course.id}</td>
+                            <td>${course.name}</td>
+                            <td>${course.credit}</td>
+                        `;
+                tbody.appendChild(row);
+              });
+            });
+  }
+
+  // 初始加载所有课程
+  searchCourses();
+</script>
+</body>
+</html>
